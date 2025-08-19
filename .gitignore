@@ -1,3 +1,5 @@
+# Allow Logs inside src/components
+!src/components/Logs/
 # Logs
 logs
 *.log
