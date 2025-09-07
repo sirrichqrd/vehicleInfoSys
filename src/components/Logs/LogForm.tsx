@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { DriverLog, Driver, Vehicle } from '../../types';
+import { maintenanceCategories } from '@/data/maintenanceData';
 
 interface LogFormProps {
   drivers: Driver[];
@@ -26,7 +27,8 @@ function LogForm({ drivers, vehicles, log, onSubmit, onCancel }: LogFormProps) {
     status: log?.status || 'unpaid',
     // Type-specific fields
     weekOf: log?.type === 'remittance' ? (log as any).weekOf || '' : '',
-    maintenanceType: log?.type === 'maintenance' ? (log as any).maintenanceType || '' : '',
+    maintenanceCategory: log?.type === 'maintenance' ? (log as any).maintenanceCategories || '' : '',
+    maintenanceItem: log?.type === 'maintenance' ? (log as any).maintenanceItem || '' : '',
     serviceProvider: log?.type === 'maintenance' ? (log as any).serviceProvider || '' : '',
     category: log?.type === 'expense' ? (log as any).category || '' : '',
     severity: log?.type === 'incident' ? (log as any).severity || 'minor' : 'minor',
@@ -62,7 +64,8 @@ function LogForm({ drivers, vehicles, log, onSubmit, onCancel }: LogFormProps) {
         logData = {
           ...logData,
           amount: formData.amount,
-          maintenanceType: formData.maintenanceType,
+          maintenanceCategory: formData.maintenanceCategory,
+          maintenanceItem: formData.maintenanceItem,
           serviceProvider: formData.serviceProvider,
         };
         break;
@@ -227,38 +230,74 @@ function LogForm({ drivers, vehicles, log, onSubmit, onCancel }: LogFormProps) {
           )}
 
           {formData.type === 'maintenance' && (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <Label htmlFor="maintenanceType">Maintenance Type</Label>
-                <Input
-                  id="maintenanceType"
-                  value={formData.maintenanceType}
-                  onChange={(e) => handleChange('maintenanceType', e.target.value)}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="amount">Cost ($)</Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  step="0.01"
-                  value={formData.amount}
-                  onChange={(e) => handleChange('amount', parseFloat(e.target.value))}
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="serviceProvider">Service Provider</Label>
-                <Input
-                  id="serviceProvider"
-                  value={formData.serviceProvider}
-                  onChange={(e) => handleChange('serviceProvider', e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-          )}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    {/* Maintenance Category */}
+    <div>
+      <Label htmlFor="maintenanceCategory">Maintenance Category</Label>
+      <select
+        id="maintenanceCategory"
+        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+        value={formData.maintenanceCategory || ''} 
+        onChange={(e) => setFormData({...formData, maintenanceCategory: e.target.value,})}
+      >
+        <option value="">Select Category</option>
+        {maintenanceCategories.map((category) => (
+          <option key={category.id} value={category.id}>
+            {category.name}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    {/* Maintenance Item */}
+    {formData.maintenanceCategory && (
+      <div>
+        <Label htmlFor="maintenanceItem">Maintenance Item</Label>
+        <select
+          id="maintenanceItem"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+          value={formData.maintenanceItem || ''}
+          onChange={(e) => setFormData({...formData, maintenanceItem: e.target.value, })}
+        >
+          <option value="">Select Item</option>
+            {maintenanceCategories
+              .find((cat) => cat.id === formData.maintenanceCategory)?.items
+              .map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+
+        </select>
+      </div>
+    )}
+
+    {/* Cost */}
+    <div>
+      <Label htmlFor="amount">Cost ($)</Label>
+      <Input
+        id="amount"
+        type="number"
+        step="0.01"
+        value={formData.amount}
+        onChange={(e) => handleChange('amount', parseFloat(e.target.value))}
+        required
+      />
+    </div>
+
+    {/* Service Provider */}
+    <div>
+      <Label htmlFor="serviceProvider">Service Provider</Label>
+      <Input
+        id="serviceProvider"
+        value={formData.serviceProvider}
+        onChange={(e) => handleChange('serviceProvider', e.target.value)}
+        required
+              />
+    </div>
+  </div>
+)}
+
 
           {formData.type === 'expense' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

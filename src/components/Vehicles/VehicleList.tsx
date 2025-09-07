@@ -73,6 +73,7 @@ export function VehicleList({
         vehicle={editingVehicle || undefined}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
+        mode={editingVehicle ? 'edit' : 'add'}
       />
     );
   }
