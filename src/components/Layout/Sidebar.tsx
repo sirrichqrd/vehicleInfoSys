@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import logoSVG from "@/assets/favicon.svg";
 import { 
   Users, 
   Car, 
@@ -26,7 +27,7 @@ const navigation = [
   { id: 'dashboard', name: 'Dashboard', icon: Home },
   { id: 'drivers', name: 'Driver Registration', icon: Users },
   { id: 'vehicles', name: 'Vehicle Management', icon: Car },
-  { id: 'assignments', name: 'Vehicle Assignment', icon: UserCheck },
+  { id: 'assignments', name: 'Assign Vehicle', icon: UserCheck },
   { id: 'logs', name: 'Driver Logs', icon: FileText },
   { id: 'reports', name: 'Reports', icon: BarChart3 },
 ];
@@ -151,9 +152,18 @@ export function Sidebar({
               "w-full justify-start",
               isCollapsed && "justify-center px-2"
             )}
+            data-tooltip="A Product of SIR.RICHQRD"
+            style={{
+              position: 'relative'  }}
           >
-            <User className={cn("h-4 w-4", !isCollapsed && "mr-3")} />
-            {!isCollapsed && <span>Profile</span>}
+            <div className={cn("h-6 w-6", !isCollapsed && "mr-3")}>
+              <img 
+                src={logoSVG} 
+                alt="SIR.RICHQRD" 
+                className="h-full w-full object-contain"
+              />
+            </div>
+            {!isCollapsed && <span style={{ fontFamily: 'Inertia, sans-serif' }}>SIR.RICHQRD</span>}
           </Button>
         </div>
       </aside>

@@ -32,7 +32,7 @@ export function Navbar({ onMenuClick, onSearch }: NavbarProps) {
           </Button>
           <div className="flex items-center space-x-2">
             <Car className="h-8 w-8 text-blue-600" />
-            <h1 className="text-xl font-bold text-gray-900 hidden sm:block">Vehicle Information System</h1>
+            <h1 className="text-xl font-bold text-gray-900  sm:block">VIS Manager</h1>
           </div>
         </div>
         

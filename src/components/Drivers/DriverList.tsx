@@ -73,73 +73,114 @@ export function DriverList({ drivers, onAddDriver, onUpdateDriver, onDeleteDrive
           <CardTitle>Registered Drivers ({drivers.length})</CardTitle>
         </CardHeader>
         <CardContent>
-          {drivers.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">No drivers registered yet</p>
-              <Button onClick={() => setShowForm(true)} className="mt-4">
-                <Plus className="mr-2 h-4 w-4" />
-                Register First Driver
+  {drivers.length === 0 ? (
+    <div className="text-center py-8">
+      <p className="text-muted-foreground">No drivers registered yet</p>
+      <Button onClick={() => setShowForm(true)} className="mt-4">
+        <Plus className="mr-2 h-4 w-4" />
+        Register First Driver
+      </Button>
+    </div>
+  ) : (
+    <div className="overflow-x-auto">
+      {/* Desktop Table */}
+      <div className="hidden md:block">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>License Number</TableHead>
+              <TableHead>Contact</TableHead>
+              <TableHead>Date Joined</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {drivers.map((driver) => (
+              <TableRow key={driver.id}>
+                <TableCell className="font-medium">{driver.name}</TableCell>
+                <TableCell>{driver.licenseNumber}</TableCell>
+                <TableCell>
+                  <div className="space-y-1">
+                    <div className="flex items-center text-sm">
+                      <Phone className="mr-1 h-3 w-3" />
+                      {driver.phone}
+                    </div>
+                    <div className="flex items-center text-sm">
+                      <Mail className="mr-1 h-3 w-3" />
+                      {driver.email}
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>{driver.dateJoined}</TableCell>
+                <TableCell>
+                  <Badge variant={driver.status === 'active' ? 'default' : 'secondary'}>
+                    {driver.status}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(driver)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onDeleteDriver(driver.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="block md:hidden space-y-4">
+        {drivers.map((driver) => (
+          <Card key={driver.id} className="p-4 shadow-sm">
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-bold">{driver.name}</h3>
+              <Badge variant={driver.status === 'active' ? 'default' : 'secondary'}>
+                {driver.status}
+              </Badge>
+            </div>
+            <div className="text-sm text-muted-foreground mb-2">
+              License: {driver.licenseNumber}
+            </div>
+            <div className="mb-2 text-sm">
+              <div className="flex items-center">
+                <Phone className="mr-1 h-3 w-3" /> {driver.phone}
+              </div>
+              <div className="flex items-center">
+                <Mail className="mr-1 h-3 w-3" /> {driver.email}
+              </div>
+            </div>
+            <div className="text-xs text-muted-foreground mb-2">
+              Joined: {driver.dateJoined}
+            </div>
+            <div className="flex space-x-2">
+              <Button variant="outline" size="sm" onClick={() => handleEdit(driver)}>
+                <Edit className="h-4 w-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => onDeleteDriver(driver.id)}>
+                <Trash2 className="h-4 w-4" />
               </Button>
             </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>License Number</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Date Joined</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {drivers.map((driver) => (
-                  <TableRow key={driver.id}>
-                    <TableCell className="font-medium">{driver.name}</TableCell>
-                    <TableCell>{driver.licenseNumber}</TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="flex items-center text-sm">
-                          <Phone className="mr-1 h-3 w-3" />
-                          {driver.phone}
-                        </div>
-                        <div className="flex items-center text-sm">
-                          <Mail className="mr-1 h-3 w-3" />
-                          {driver.email}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{driver.dateJoined}</TableCell>
-                    <TableCell>
-                      <Badge variant={driver.status === 'active' ? 'default' : 'secondary'}>
-                        {driver.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEdit(driver)}
-                        >
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => onDeleteDriver(driver.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  )}
+</CardContent>
       </Card>
     </div>
   );

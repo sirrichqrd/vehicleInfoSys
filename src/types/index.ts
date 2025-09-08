@@ -8,6 +8,7 @@ export interface Driver {
   dateJoined: string;
   status: 'active' | 'inactive';
   dateOfBirth: string;
+  emergencyContactName: string;
   emergencyContactNumber: string;
 }
 

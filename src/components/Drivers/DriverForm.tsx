@@ -20,6 +20,10 @@ export function DriverForm({ driver, onSubmit, onCancel }: DriverFormProps) {
     phone: driver?.phone || '',
     email: driver?.email || '',
     address: driver?.address || '',
+    dateJoined: driver?.dateJoined || new Date().toISOString().split('T')[0],
+    dateOfBirth: driver?.dateOfBirth || new Date().toISOString().split('T')[0],
+    emergencyContactName: driver?.emergencyContactName || '',
+    emergencyContactNumber: driver?.emergencyContactNumber || '',
     status: driver?.status || 'active' as const,
   });
 
@@ -28,6 +32,7 @@ export function DriverForm({ driver, onSubmit, onCancel }: DriverFormProps) {
     onSubmit({
       ...formData,
       dateJoined: driver?.dateJoined || new Date().toISOString().split('T')[0],
+      dateOfBirth: driver?.dateOfBirth || new Date().toISOString().split('T')[0],
     });
   };
 
@@ -86,15 +91,58 @@ export function DriverForm({ driver, onSubmit, onCancel }: DriverFormProps) {
             </div>
           </div>
 
-          <div>
-            <Label htmlFor="address">Address</Label>
-            <Textarea
-              id="address"
-              value={formData.address}
-              onChange={(e) => handleChange('address', e.target.value)}
-              required
-            />
-          </div>
+                  <div>
+                    <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                    <Input
+                      id="dateOfBirth"
+                      type="date"
+                      value={formData.dateOfBirth}
+                      onChange={(e) => handleChange('dateOfBirth', e.target.value)}
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="dateJoined">Date Joined</Label>
+                    <Input
+                      id="dateJoined"
+                      type="date"
+                      value={formData.dateJoined}
+                      onChange={(e) => handleChange('dateJoined', e.target.value)}
+                      required
+                    />
+                  </div>
+
+                <div>
+                  <Label htmlFor="address">Address</Label>
+                  <Textarea
+                    id="address"
+                    value={formData.address}
+                    onChange={(e) => handleChange('address', e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="emergencyContactName">Emergency Contact Name</Label>
+                    <Input
+                      id="emergencyContactName"
+                      value={formData.emergencyContactName}
+                      onChange={(e) => handleChange('emergencyContactName', e.target.value)}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="emergencyContactNumber">Emergency Contact Number</Label>
+                    <Input
+                      id="emergencyContactNumber"
+                      type="tel"
+                      value={formData.emergencyContactNumber}
+                      onChange={(e) => handleChange('emergencyContactNumber', e.target.value)}
+                    />
+                  </div>
+                </div>
 
           <div>
             <Label htmlFor="status">Status</Label>
