@@ -20,6 +20,7 @@ export function DriverForm({ driver, onSubmit, onCancel }: DriverFormProps) {
     phone: driver?.phone || '',
     email: driver?.email || '',
     address: driver?.address || '',
+    passport: driver?.passport || '',
     dateJoined: driver?.dateJoined || new Date().toISOString().split('T')[0],
     dateOfBirth: driver?.dateOfBirth || new Date().toISOString().split('T')[0],
     emergencyContactName: driver?.emergencyContactName || '',
@@ -48,6 +49,37 @@ export function DriverForm({ driver, onSubmit, onCancel }: DriverFormProps) {
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Passport Upload */}
+              <div>
+                <label className="block text-sm font-medium">Passport</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          passport: reader.result as string, // save base64
+                        }));
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="mt-1 text-sm"
+                />
+                {formData.passport && (
+                  <img
+                    src={formData.passport}
+                    alt="Driver Passport"
+                    className="mt-2 w-20 h-20 object-cover rounded-full border"
+                  />
+                )}
+              </div>
+
+
             <div>
               <Label htmlFor="name">Full Name</Label>
               <Input

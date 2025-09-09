@@ -10,7 +10,7 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
-import { Edit, Trash2, Plus } from 'lucide-react';
+import { Edit, Trash2, Plus, Eye } from 'lucide-react';
 import { Vehicle, Driver } from '../../types';
 import { VehicleForm } from './VehicleForm';
 import {
@@ -24,7 +24,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface VehicleListProps {
   vehicles: Vehicle[];
@@ -43,10 +49,15 @@ export function VehicleList({
 }: VehicleListProps) {
   const [showForm, setShowForm] = useState(false);
   const [editingVehicle, setEditingVehicle] = useState<Vehicle | null>(null);
+  const [viewingVehicle, setViewingVehicle] = useState<Vehicle | null>(null);
 
   const handleEdit = (vehicle: Vehicle) => {
     setEditingVehicle(vehicle);
     setShowForm(true);
+  };
+
+  const handleView = (vehicle: Vehicle) => {
+    setViewingVehicle(vehicle);
   };
 
   const handleSubmit = (vehicleData: Omit<Vehicle, 'id'>) => {
@@ -70,6 +81,11 @@ export function VehicleList({
     return driver ? driver.name : 'Unknown Driver';
   };
 
+  const getDriverDetails = (driverId?: string) => {
+    if (!driverId) return null;
+    return drivers.find(d => d.id === driverId);
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'available': return 'bg-green-100 text-green-800';
@@ -77,6 +93,101 @@ export function VehicleList({
       case 'maintenance': return 'bg-orange-100 text-orange-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const VehicleDetailsDialog = ({ vehicle }: { vehicle: Vehicle }) => {
+    const assignedDriver = getDriverDetails(vehicle.assignedDriverId);
+    
+    return (
+      <DialogContent className="rounded-2xl max-w-2xl">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold">Vehicle Details</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Plate Number</label>
+              <p className="font-semibold">{vehicle.plateNumber}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Status</label>
+              <div className="mt-1">
+                <Badge className={getStatusColor(vehicle.status)} variant="secondary">
+                  {vehicle.status}
+                </Badge>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Make</label>
+              <p>{vehicle.make}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Model</label>
+              <p>{vehicle.model}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Year</label>
+              <p>{vehicle.year}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Color</label>
+              <p>{vehicle.color}</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Feul Type</label>
+              <p>{vehicle.fuelType}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">Mileage</label>
+              <p>{vehicle.mileage}</p>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-muted-foreground">VIN</label>
+            <p className="font-mono text-sm bg-muted p-2 rounded">{vehicle.vin}</p>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-muted-foreground">License Number</label>
+            <p className="font-mono text-sm bg-muted p-2 rounded">{vehicle.licenseNumber}</p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">License Issuing Date</label>
+              <p className="font-mono text-sm bg-muted p-2 rounded">{vehicle.licenseIssuingDate}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-muted-foreground">License Expiry Date</label>
+              <p className="font-mono text-sm bg-muted p-2 rounded">{vehicle.licenseExpiryDate}</p>
+            </div>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium text-muted-foreground">Assigned Driver</label>
+            {assignedDriver ? (
+              <div className="mt-1 p-3 bg-muted rounded">
+                <p className="font-medium">{assignedDriver.name}</p>
+                <p className="text-sm text-muted-foreground">{assignedDriver.email}</p>
+                <p className="text-sm text-muted-foreground">License: {assignedDriver.licenseNumber}</p>
+              </div>
+            ) : (
+              <p className="text-muted-foreground mt-1">Unassigned</p>
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    );
   };
 
   if (showForm) {
@@ -152,6 +263,18 @@ export function VehicleList({
                 </TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleView(vehicle)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <VehicleDetailsDialog vehicle={vehicle} />
+                    </Dialog>
                     <Button
                       variant="outline"
                       size="sm"
@@ -195,7 +318,7 @@ export function VehicleList({
       {/* Mobile Card View */}
       <div className="block md:hidden space-y-4">
         {vehicles.map((vehicle) => (
-          <Card key={vehicle.id} className="p-4 shadow-sm">
+          <Card key={vehicle.id} className="p-4 shadow-sm ">
             <div className="flex justify-between items-center mb-2">
               <h3 className="font-bold">{vehicle.plateNumber}</h3>
               <Badge className={getStatusColor(vehicle.status)} variant="secondary">
@@ -210,6 +333,18 @@ export function VehicleList({
               Driver: {getDriverName(vehicle.assignedDriverId)}
             </div>
             <div className="flex space-x-2">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleView(vehicle)}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </DialogTrigger>
+                <VehicleDetailsDialog vehicle={vehicle} />
+              </Dialog>
               <Button variant="outline" size="sm" onClick={() => handleEdit(vehicle)}>
                 <Edit className="h-4 w-4" />
               </Button>
@@ -220,7 +355,7 @@ export function VehicleList({
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="rounded-2xl sm:rounded-xl">
+                <AlertDialogContent className="rounded-2xl sm:rounded-xl max-w-md">
                   <AlertDialogHeader>
                     <AlertDialogTitle>Delete Vehicle</AlertDialogTitle>
                     <AlertDialogDescription>

@@ -6,6 +6,7 @@ export interface Driver {
   email: string;
   address: string;
   dateJoined: string;
+  passport?: string;
   status: 'active' | 'inactive';
   dateOfBirth: string;
   emergencyContactName: string;
