@@ -13,6 +13,18 @@ import {
 import { Edit, Trash2, Plus, Phone, Mail } from 'lucide-react';
 import { Driver } from '../../types';
 import { DriverForm } from './DriverForm';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 
 interface DriverListProps {
   drivers: Driver[];
@@ -128,13 +140,32 @@ export function DriverList({ drivers, onAddDriver, onUpdateDriver, onDeleteDrive
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => onDeleteDriver(driver.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="outline" size="sm" className="text-red-600">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent >
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete Driver</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to delete driver <b>{driver.name}</b>?  
+                            This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => onDeleteDriver(driver.id)}
+                            className="bg-red-600 text-white hover:bg-red-700"
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </TableCell>
               </TableRow>
@@ -171,9 +202,32 @@ export function DriverList({ drivers, onAddDriver, onUpdateDriver, onDeleteDrive
               <Button variant="outline" size="sm" onClick={() => handleEdit(driver)}>
                 <Edit className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="sm" onClick={() => onDeleteDriver(driver.id)}>
-                <Trash2 className="h-4 w-4" />
-              </Button>
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="text-red-600">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="rounded-2xl sm:rounded-xl">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Delete Driver</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Are you sure you want to delete driver <b>{driver.name}</b>?  
+                      This action cannot be undone.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => onDeleteDriver(driver.id)}
+                      className="bg-red-600 text-white hover:bg-red-700"
+                    >
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </Card>
         ))}

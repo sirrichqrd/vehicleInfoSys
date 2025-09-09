@@ -10,7 +10,7 @@ import {
   Home,
   X,
   ChevronLeft,
-  User
+  History
 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 
@@ -30,6 +30,7 @@ const navigation = [
   { id: 'assignments', name: 'Assign Vehicle', icon: UserCheck },
   { id: 'logs', name: 'Driver Logs', icon: FileText },
   { id: 'reports', name: 'Reports', icon: BarChart3 },
+  { id: 'history', name: 'History', icon: History },
 ];
 
 export function Sidebar({ 

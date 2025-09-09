@@ -10,6 +10,8 @@ export interface Driver {
   dateOfBirth: string;
   emergencyContactName: string;
   emergencyContactNumber: string;
+  deleted?: boolean;
+  deletedAt?: string;
 }
 
 export interface Vehicle {
@@ -26,8 +28,21 @@ export interface Vehicle {
   registrationDate: string;
   status: 'available' | 'assigned' | 'maintenance';
   assignedDriverId?: string;
-  fuelType: 'Gasoline' | 'Diesel' | 'Electric' | 'Hybrid' | 'Plug-in Hybrid' | 'CNG' | 'LPG' | 'Hydrogen' | 'Biodiesel' | 'Ethanol' | 'Synthetic fuels';
+  fuelType:
+    | 'Gasoline'
+    | 'Diesel'
+    | 'Electric'
+    | 'Hybrid'
+    | 'Plug-in Hybrid'
+    | 'CNG'
+    | 'LPG'
+    | 'Hydrogen'
+    | 'Biodiesel'
+    | 'Ethanol'
+    | 'Synthetic fuels';
   mileage: number;
+  deleted?: boolean;
+  deletedAt?: string;
 }
 
 export interface VehicleAssignment {
@@ -116,7 +131,7 @@ export interface DashboardStats {
   totalExpenses: number;
 }
 
-export interface RecentActivity {
+export interface RecentActivityEntry {
   date: string;
   type: 'driver' | 'vehicle' | 'log';
   driverId?: string;

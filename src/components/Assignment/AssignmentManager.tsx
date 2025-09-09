@@ -199,57 +199,65 @@ export function AssignmentManager({
         </Card>
       </div>
 
-      {/* Assignment History */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Assignment History</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Vehicle</TableHead>
-                <TableHead>Driver</TableHead>
-                <TableHead>Assigned Date</TableHead>
-                <TableHead>Unassigned Date</TableHead>
-                <TableHead>Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {assignments.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center text-muted-foreground">
-                    No assignment history
-                  </TableCell>
-                </TableRow>
-              ) : (
-                assignments
-                  .sort((a, b) => new Date(b.assignedDate).getTime() - new Date(a.assignedDate).getTime())
-                  .map((assignment) => {
-                    const vehicle = vehicles.find(v => v.id === assignment.vehicleId);
-                    const driver = drivers.find(d => d.id === assignment.driverId);
-                    
-                    return (
-                      <TableRow key={assignment.id}>
-                        <TableCell>
-                          {vehicle ? `${vehicle.plateNumber} - ${vehicle.make} ${vehicle.model}` : 'Unknown Vehicle'}
-                        </TableCell>
-                        <TableCell>{driver ? driver.name : 'Unknown Driver'}</TableCell>
-                        <TableCell>{assignment.assignedDate}</TableCell>
-                        <TableCell>{assignment.unassignedDate || '-'}</TableCell>
-                        <TableCell>
-                          <Badge variant={assignment.status === 'active' ? 'default' : 'secondary'}>
-                            {assignment.status}
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-              )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+{/* Assignment History */}
+<Card>
+  <CardHeader>
+    <CardTitle>Assignment History</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Vehicle</TableHead>
+            <TableHead>Driver</TableHead>
+            <TableHead>Assigned Date</TableHead>
+            <TableHead>Unassigned Date</TableHead>
+            <TableHead>Status</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {assignments.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center text-muted-foreground">
+                No assignment history
+              </TableCell>
+            </TableRow>
+          ) : (
+            assignments
+              .sort((a, b) => new Date(b.assignedDate).getTime() - new Date(a.assignedDate).getTime())
+              .map((assignment) => {
+                const vehicle = vehicles.find(v => v.id === assignment.vehicleId);
+                const driver = drivers.find(d => d.id === assignment.driverId);
+                
+                return (
+                  <TableRow key={assignment.id}>
+                    <TableCell className="whitespace-nowrap">
+                      {vehicle ? `${vehicle.plateNumber} - ${vehicle.make} ${vehicle.model}` : 'Unknown Vehicle'}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {driver ? driver.name : 'Unknown Driver'}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {assignment.assignedDate}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap">
+                      {assignment.unassignedDate || '-'}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={assignment.status === 'active' ? 'default' : 'secondary'}>
+                        {assignment.status}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  </CardContent>
+</Card>
     </div>
   );
 }

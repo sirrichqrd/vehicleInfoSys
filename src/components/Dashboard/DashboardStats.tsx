@@ -1,8 +1,13 @@
+// DashboardStats.tsx
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Users, Car, DollarSign } from 'lucide-react';
 import { Driver, Vehicle, DriverLog } from '../../types';
 import { LicenseAlerts } from '../../components/License/LicenseAlerts';
 import { getLicenseAlerts } from '../../utils/licenseAlerts';
+
+
+// ✅ Import your AlertWatcher
+import { AlertWatcher } from '@/components/Notifications/AlertWatcher';
 
 interface DashboardStatsProps {
   drivers: Driver[];
@@ -58,6 +63,9 @@ export function DashboardStats({ drivers, vehicles, logs }: DashboardStatsProps)
 
   return (
     <div className="space-y-8">
+      {/* 🔔 Global Notification Watcher */}
+      <AlertWatcher vehicles={vehicles} />
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => {
